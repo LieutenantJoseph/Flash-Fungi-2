@@ -1,0 +1,115 @@
+/* src/app/globals.css */
+/* Flash Fungi — Living Mycology Design System */
+
+@import "tailwindcss";
+
+/* ============================================================
+   DESIGN TOKENS — Living Mycology Theme
+   Ported from the original CSS variables, now the single source.
+   ============================================================ */
+
+@theme {
+  /* Earth-tone palette */
+  --color-fungi-primary: #8B4513;
+  --color-fungi-secondary: #D2691E;
+  --color-fungi-accent: #FF6B35;
+  --color-fungi-success: #228B22;
+  --color-fungi-earth: #A0522D;
+  --color-fungi-bark: #654321;
+  --color-fungi-moss: #8FBC8F;
+  --color-fungi-spore: #F4E4C1;
+  --color-fungi-shadow: #3E2723;
+
+  /* Backgrounds */
+  --color-fungi-bg: #1A1A19;
+  --color-fungi-bg-secondary: #2D2D2A;
+  --color-fungi-bg-tertiary: #3A3A37;
+  --color-fungi-bg-card: #2A2826;
+
+  /* Text */
+  --color-fungi-text: #F5F5DC;
+  --color-fungi-text-secondary: #D3D3C7;
+  --color-fungi-text-muted: #A8A89C;
+
+  /* Semantic */
+  --color-fungi-danger: #DC2626;
+  --color-fungi-warning: #F59E0B;
+
+  /* Radii */
+  --radius-organic: 0.75rem 1.5rem 0.75rem 1.5rem;
+
+  /* Font families */
+  --font-display: "Space Grotesk", "DM Sans", system-ui, sans-serif;
+  --font-body: "Inter", "DM Sans", system-ui, sans-serif;
+}
+
+/* ============================================================
+   BASE STYLES
+   ============================================================ */
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-fungi-bg);
+  color: var(--color-fungi-text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Focus styles for accessibility */
+:focus-visible {
+  outline: 2px solid var(--color-fungi-accent);
+  outline-offset: 2px;
+}
+
+/* Selection color */
+::selection {
+  background-color: color-mix(in srgb, var(--color-fungi-secondary) 40%, transparent);
+}
+
+/* ============================================================
+   SCROLLBAR STYLING
+   ============================================================ */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-fungi-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-fungi-bg-tertiary);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-fungi-text-muted);
+}
+
+/* ============================================================
+   UTILITY ANIMATIONS
+   ============================================================ */
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 12px color-mix(in srgb, var(--color-fungi-secondary) 30%, transparent); }
+  50% { box-shadow: 0 0 24px color-mix(in srgb, var(--color-fungi-secondary) 50%, transparent); }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 3s ease-in-out infinite;
+}
