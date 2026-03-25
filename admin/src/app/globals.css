@@ -1,0 +1,49 @@
+/* admin/src/app/globals.css */
+@import "tailwindcss";
+
+@theme {
+  --color-admin-bg: #0F1419;
+  --color-admin-bg-secondary: #1A1F2E;
+  --color-admin-bg-card: #1E2433;
+  --color-admin-bg-hover: #252B3B;
+  --color-admin-border: #2A3244;
+  --color-admin-border-hover: #3A4558;
+  --color-admin-text: #E2E8F0;
+  --color-admin-text-secondary: #94A3B8;
+  --color-admin-text-muted: #64748B;
+  --color-admin-accent: #3B82F6;
+  --color-admin-accent-hover: #2563EB;
+  --color-admin-success: #22C55E;
+  --color-admin-warning: #F59E0B;
+  --color-admin-danger: #EF4444;
+
+  --font-body: "Inter", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", monospace;
+}
+
+html { color-scheme: dark; }
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--color-admin-bg);
+  color: var(--color-admin-text);
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-admin-accent);
+  outline-offset: 2px;
+}
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--color-admin-bg); }
+::-webkit-scrollbar-thumb { background: var(--color-admin-border); border-radius: 3px; }
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out both;
+}

@@ -1,11 +1,12 @@
-// src/lib/supabase/server.ts
-// Server-side Supabase client. Uses cookies for auth session management.
-// Use this in Server Components, Route Handlers, and Server Actions.
+// admin/src/lib/supabase/server.ts
+// Admin server client. Uses service role key to bypass RLS for all data operations.
+// Auth still uses anon key + cookies for login session management.
 
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 
-export async function createClient() {
+// Auth client — for checking who is logged in (uses anon key + cookies)
+export async function createAuthClient() {
   const cookieStore = await cookies();
 
   return createServerClient(
@@ -16,14 +17,13 @@ export async function createClient() {
         getAll() {
           return cookieStore.getAll();
         },
-        setAll(cookiesToSet) {
+        setAll(cookiesToSet: { name: string; value: string; options?: Record<string, unknown> }[]) {
           try {
             cookiesToSet.forEach(({ name, value, options }) =>
               cookieStore.set(name, value, options)
             );
           } catch {
-            // The `setAll` method is called from a Server Component.
-            // This can be ignored if you have middleware refreshing sessions.
+            // Server Component context
           }
         },
       },
@@ -31,9 +31,7 @@ export async function createClient() {
   );
 }
 
-// Admin client using service role key — bypasses RLS.
-// ONLY use in trusted server-side contexts (Route Handlers, Server Actions).
-// NEVER expose this to the browser.
+// Admin data client — bypasses RLS for all CRUD operations
 export async function createAdminClient() {
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!serviceRoleKey) {
@@ -48,8 +46,8 @@ export async function createAdminClient() {
         getAll() {
           return [];
         },
-        setAll() {
-          // Admin client doesn't need cookie management
+        setAll(_cookiesToSet: { name: string; value: string; options?: Record<string, unknown> }[]) {
+          // Admin client doesn't manage cookies
         },
       },
     }
