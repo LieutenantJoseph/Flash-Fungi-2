@@ -3,6 +3,7 @@
 
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
+import { getUserProfile, getUserStats } from "@/lib/api";
 
 export const metadata = {
   title: "Profile",
@@ -19,25 +20,10 @@ export default async function ProfilePage() {
     redirect("/login");
   }
 
-  // Fetch user profile data
-  const { data: profile } = await supabase
-    .from("user_profiles")
-    .select("*")
-    .eq("id", user.id)
-    .single();
-
-  // Fetch study session count
-  const { count: sessionCount } = await supabase
-    .from("study_sessions")
-    .select("*", { count: "exact", head: true })
-    .eq("user_id", user.id);
-
-  // Fetch module completion count
-  const { count: completedModules } = await supabase
-    .from("user_progress")
-    .select("*", { count: "exact", head: true })
-    .eq("user_id", user.id)
-    .eq("completed", true);
+  const [profile, stats] = await Promise.all([
+    getUserProfile(supabase, user.id),
+    getUserStats(supabase, user.id),
+  ]);
 
   return (
     <div className="animate-fade-in max-w-2xl">
@@ -82,8 +68,10 @@ export default async function ProfilePage() {
           Study Stats
         </h2>
         <div className="grid grid-cols-2 gap-4">
-          <StatBox label="Study Sessions" value={sessionCount ?? 0} icon="📊" />
-          <StatBox label="Modules Completed" value={completedModules ?? 0} icon="🎓" />
+          <StatBox label="Study Sessions" value={stats.totalSessions} icon="📊" />
+          <StatBox label="Modules Completed" value={stats.modulesCompleted} icon="🎓" />
+          <StatBox label="Questions Answered" value={stats.totalQuestions} icon="❓" />
+          <StatBox label="Accuracy" value={stats.accuracy} icon="🎯" suffix="%" />
         </div>
         <p className="text-xs text-fungi-text-muted mt-4">
           Detailed stats and achievements will be available in Phase 3.
@@ -93,12 +81,12 @@ export default async function ProfilePage() {
   );
 }
 
-function StatBox({ label, value, icon }: { label: string; value: number; icon: string }) {
+function StatBox({ label, value, icon, suffix }: { label: string; value: number; icon: string; suffix?: string }) {
   return (
     <div className="p-4 rounded-lg bg-fungi-bg-secondary">
       <div className="text-xl mb-1">{icon}</div>
       <div className="text-2xl font-bold font-[family-name:var(--font-display)]">
-        {value}
+        {value}{suffix}
       </div>
       <div className="text-xs text-fungi-text-muted">{label}</div>
     </div>

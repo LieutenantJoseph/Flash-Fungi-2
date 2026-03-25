@@ -3,6 +3,7 @@
 // Server Component — data fetched at request time.
 
 import { createClient } from "@/lib/supabase/server";
+import { getPublishedFieldGuides } from "@/lib/api";
 import type { FieldGuide } from "@/types/database";
 
 export const metadata = {
@@ -12,18 +13,13 @@ export const metadata = {
 export default async function FieldGuidePage() {
   const supabase = await createClient();
 
-  const { data: guides, error } = await supabase
-    .from("field_guides")
-    .select("id, species_name, common_name, genus, family, description, status")
-    .eq("status", "published")
-    .order("species_name", { ascending: true })
-    .returns<Pick<FieldGuide, "id" | "species_name" | "common_name" | "genus" | "family" | "description" | "status">[]>();
-
-  if (error) {
+  let speciesList: FieldGuide[];
+  try {
+    speciesList = await getPublishedFieldGuides(supabase);
+  } catch (error) {
     console.error("Error loading field guides:", error);
+    speciesList = [];
   }
-
-  const speciesList = guides ?? [];
 
   // Group by family
   const families = speciesList.reduce<Record<string, typeof speciesList>>((acc, guide) => {

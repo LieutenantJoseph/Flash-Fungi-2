@@ -3,6 +3,7 @@
 // Phase 3 will build out the full module player.
 
 import { createClient } from "@/lib/supabase/server";
+import { getPublishedModules } from "@/lib/api";
 import type { TrainingModule } from "@/types/database";
 
 export const metadata = {
@@ -12,14 +13,13 @@ export const metadata = {
 export default async function TrainingPage() {
   const supabase = await createClient();
 
-  const { data: modules } = await supabase
-    .from("training_modules")
-    .select("id, title, icon, category, difficulty_level, duration_minutes, published")
-    .eq("published", true)
-    .order("created_at", { ascending: true })
-    .returns<Pick<TrainingModule, "id" | "title" | "icon" | "category" | "difficulty_level" | "duration_minutes" | "published">[]>();
-
-  const moduleList = modules ?? [];
+  let moduleList: TrainingModule[];
+  try {
+    moduleList = await getPublishedModules(supabase);
+  } catch (error) {
+    console.error("Error loading modules:", error);
+    moduleList = [];
+  }
 
   const difficultyColor = (level: string) => {
     switch (level) {
