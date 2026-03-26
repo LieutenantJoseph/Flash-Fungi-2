@@ -48,7 +48,7 @@ export async function createAdminClient() {
         getAll() {
           return [];
         },
-        setAll() {
+        setAll(_cookiesToSet: { name: string; value: string; options?: Record<string, unknown> }[]) {
           // Admin client doesn't need cookie management
         },
       },

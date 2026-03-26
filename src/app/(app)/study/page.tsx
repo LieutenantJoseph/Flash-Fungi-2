@@ -13,17 +13,15 @@ const STUDY_MODES = [
     id: "quick",
     title: "Quick Study",
     icon: "⚡",
-    description: "Rapid-fire identification practice — 10 species in 5 minutes.",
+    description: "Rapid-fire identification practice — 10 species, quick rounds.",
     color: "from-fungi-accent to-fungi-secondary",
-    ready: false,
   },
   {
     id: "focused",
     title: "Focused Study",
     icon: "🎯",
-    description: "Filter by family or genus for targeted practice sessions.",
+    description: "Filter by family for targeted practice sessions.",
     color: "from-fungi-success to-fungi-moss",
-    ready: false,
   },
   {
     id: "marathon",
@@ -31,7 +29,6 @@ const STUDY_MODES = [
     icon: "🏃",
     description: "Unlimited continuous study. See how far you can go.",
     color: "from-fungi-primary to-fungi-bark",
-    ready: false,
   },
 ] as const;
 
@@ -62,18 +59,12 @@ export default function StudyPage() {
               {mode.description}
             </p>
 
-            {mode.ready ? (
-              <Link
-                href={`/study/${mode.id}`}
-                className="inline-block px-4 py-2 text-sm font-medium rounded-lg bg-gradient-to-r from-fungi-primary to-fungi-secondary text-white hover:opacity-90 transition-opacity"
-              >
-                Start
-              </Link>
-            ) : (
-              <span className="inline-block px-4 py-2 text-sm font-medium rounded-lg bg-fungi-bg-tertiary/50 text-fungi-text-muted">
-                Coming in Phase 3
-              </span>
-            )}
+            <Link
+              href={`/study/${mode.id}`}
+              className="inline-block px-4 py-2 text-sm font-medium rounded-lg bg-gradient-to-r from-fungi-primary to-fungi-secondary text-white hover:opacity-90 transition-opacity"
+            >
+              Start
+            </Link>
           </div>
         ))}
       </div>
